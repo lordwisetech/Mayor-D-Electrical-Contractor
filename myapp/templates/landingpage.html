@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mayor D Electrical Contractor</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+    }
+#torch {
+  transition: transform 0.05s ease-out;
+  text-shadow: 0 0 10px #00ffcc;
+  filter: drop-shadow(0 0 8px #00ffee);
+}
+
+    .flashlight-container {
+      text-align: center;
+      padding: 15vh 2rem 5vh;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      width: 100px;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 2rem;
+      background: #00ffcc;
+      color: #000;
+      padding: 1rem 2rem;
+      font-weight: bold;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #00ffaa;
+      transform: scale(1.05);
+    }
+
+    .section {
+      max-width: 800px;
+      margin: 4rem auto;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 15px;
+      backdrop-filter: blur(4px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .section h2 {
+      color: #00ffcc;
+      margin-bottom: 1rem;
+    }
+
+    .section ul,
+    .section ol {
+      text-align: left;
+      margin: 1rem auto;
+      padding-left: 1.2rem;
+    }
+
+    .flashlight {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.98) 40%);
+      mix-blend-mode: screen;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="flashlight-container">
+    <img src="{% static 'images/logo.png' %}" alt="Mayor D Logo" class="logo">
+    <h1>Mayor D Electrical Contractor</h1>
+    <p>Real-time chat, detailed quotations (with materials list, printable as PDF), and job tracking — all in one place.</p>
+    <a href="" class="btn">Hire an Engineer</a>
+  </div>
+     <div id="torch" style="position: fixed; top: 0; left: 0; z-index: 3; font-size: 2.5rem; pointer-events: none;">
+  🔦
+</div>
+
+  <div class="section">
+    <h2>Why Mayor D?</h2>
+    <p>We connect you with verified electrical engineers near you. Book jobs, build material-based quotations, pay securely via Paystack, and track your service in real-time.</p>
+  </div>
+
+  <div class="section">
+    <h2>Services</h2>
+    <ul>
+      <li>🔌 Engineer Availability Management</li>
+      <li>💬 Real-Time Chat + Media Sharing</li>
+      <li>🧾 Quotation Builder with PDF Summary</li>
+      <li>📍 GPS Location + Tracking</li>
+      <li>💳 Secure Payment via Paystack</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>How It Works</h2>
+    <ol>
+      <li>Find available engineers near you</li>
+      <li>Chat, send location, and build job requests</li>
+      <li>Receive quotations in real-time</li>
+      <li>Make secure payments</li>
+      <li>Track engineer until job is completed</li>
+    </ol>
+  </div>
+
+  <div class="flashlight"></div>
+
+  <script>
+  const flashlight = document.querySelector('.flashlight');
+  const torch = document.getElementById('torch');
+
+  document.addEventListener('mousemove', (e) => {
+    const x = e.clientX;
+    const y = e.clientY;
+
+    // Move light background
+    flashlight.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.98) 40%)`;
+
+    // Animate torch emoji to follow cursor with wiggle
+    torch.style.transform = `translate(${x}px, ${y}px) rotate(${Math.sin(x * 0.01) * 10}deg)`;
+  });
+</script>
+
+</body>
+</html>
