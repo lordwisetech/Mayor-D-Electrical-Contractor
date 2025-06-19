@@ -2,17 +2,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-class EngineerManager(BaseUserManager):
-    def create_user(self, email, name, phone, password=None):
-        if not email:
-            raise ValueError('Engineers must have an email address')
-        email = self.normalize_email(email)
-        user = self.model(email=email, name=name, phone=phone)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+# class EngineerManager(BaseUserManager):
+#     def create_user(self, email, name, phone, password=None):
+#         if not email:
+#             raise ValueError('Engineers must have an email address')
+#         email = self.normalize_email(email)
+#         user = self.model(email=email, name=name, phone=phone)
+#         user.set_password(password)
+#         user.save(using=self._db)
+#         return user
 
-class Engineer(AbstractBaseUser):
+# class Engineer(AbstractBaseUser):
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)

@@ -9,9 +9,9 @@ from . import views
 
 urlpatterns = [
     path('', views.landing, name='landing'),
-    path('signup/', views.engineer_signup, name='engineer_signup'),
-    path('engineers/', views.engineer_directory, name='engineer_directory'),
-    path('login/', views.engineer_login, name='engineer_login'),
+    # path('signup/', views.engineer_signup, name='engineer_signup'),
+    # path('engineers/', views.engineer_directory, name='engineer_directory'),
+    # path('login/', views.engineer_login, name='engineer_login'),
 
 
   
