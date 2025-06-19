@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Engineer Signup - Mayor D</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      padding: 2rem;
+    }
+
+    .signup-container {
+      max-width: 500px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 12px;
+      backdrop-filter: blur(5px);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #00ffcc;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.7rem;
+      border: none;
+      margin-top: 0.5rem;
+      border-radius: 8px;
+      background: #111;
+      color: #fff;
+    }
+
+    .btn {
+      margin-top: 2rem;
+      width: 100%;
+      background: #00ffcc;
+      color: #000;
+      padding: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #00ffaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h2>Engineer Signup</h2>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <label for="name">Full Name</label>
+      <input type="text" name="name" required>
+
+      <label for="email">Email Address</label>
+      <input type="email" name="email" required>
+
+      <label for="phone">Phone Number</label>
+      <input type="text" name="phone" required>
+
+      <label for="password">Password</label>
+      <input type="password" name="password" required>
+
+      <label for="confirm_password">Confirm Password</label>
+      <input type="password" name="confirm_password" required>
+
+      <label for="skills">Skills (comma-separated)</label>
+      <input type="text" name="skills" placeholder="e.g., Wiring, Inverter, Solar, etc.">
+
+      <label for="profile_pic">Profile Picture</label>
+      <input type="file" name="profile_pic" accept="image/*">
+
+      <button type="submit" class="btn">Join as Engineer</button>
+    </form>
+  </div>
+</body>
+</html>

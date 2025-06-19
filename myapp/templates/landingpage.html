@@ -2,7 +2,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+ <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Hire verified electrical engineers near you. Real-time chat, detailed quotations, and job tracking.">
+<meta name="keywords" content="Electrical Contractor, Hire Engineer, Real-time Chat, Quotation Builder, Job Tracking, Paystack Payment">
   <title>Mayor D Electrical Contractor</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
@@ -94,6 +97,38 @@
       mix-blend-mode: screen;
       z-index: 1;
     }
+    .whatsapp {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10;
+    }
+    .whatsapp img {
+      width: 50px;
+    }
+    .call-to-action {
+  background: linear-gradient(135deg, #00ffaa15, #00ffcc10);
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.btn-glow {
+  background: #00ffcc;
+  color: #000;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 0 15px #00ffaa88;
+  transition: 0.3s ease;
+}
+
+.btn-glow:hover {
+  background: #00ffaa;
+  transform: scale(1.05);
+  box-shadow: 0 0 25px #00ffaaaa;
+}
+
   </style>
 </head>
 <body>
@@ -135,6 +170,18 @@
     </ol>
   </div>
 
+<div class="section call-to-action">
+  <h2>Do You Have the Skills?</h2>
+  <p>Are you a certified electrical engineer ready to work and earn with Mayor D? Join our network and start getting real job requests today!</p>
+  <a href="" class="btn btn-glow">Register as Engineer</a>
+</div>
+
+
+
+
+ <a href="https://wa.me/2348123110104" class="whatsapp" target="_blank">
+  <img src="{% static 'images/whatsapp-icon.png' %}" alt="WhatsApp">
+</a>
   <div class="flashlight"></div>
 
   <script>

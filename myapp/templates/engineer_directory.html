@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Engineer Directory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    body {
+      margin: 0;
+      padding: 1rem;
+      font-family: 'Montserrat', sans-serif;
+      background: #000;
+      color: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #00ffcc;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      background: rgba(0, 255, 204, 0.1);
+    }
+
+    .profile-pic {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+      border: 2px solid #00ffcc;
+    }
+
+    .engineer-name {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #00ffcc;
+    }
+
+    @media (max-width: 600px) {
+      .profile-pic {
+        width: 60px;
+        height: 60px;
+      }
+      .engineer-name {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Available Engineers</h1>
+
+  <div class="grid">
+    {% for engineer in engineers %}
+      <div class="card">
+        <img src="{{ engineer.profile_pic.url }}" alt="{{ engineer.name }}" class="profile-pic">
+        <div class="engineer-name">{{ engineer.name }}</div>
+      </div>
+    {% empty %}
+      <p>No engineers available right now.</p>
+    {% endfor %}
+  </div>
+</body>
+</html>
