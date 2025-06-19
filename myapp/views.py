@@ -1,50 +1,69 @@
-from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate, login
-# Create your views here.
-# views.py
+
+from django.conf import settings
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
+from .forms import EngineerRegisterForm, CustomerRegisterForm
+from .models import EngineerProfile, CustomerProfile
+from django.contrib.auth.models import User
+
+def register_engineer(request):
+    if request.method == 'POST':
+        form = EngineerRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+
+            EngineerProfile.objects.create(
+                user=user,
+                phone=form.cleaned_data['phone'],
+                skills=form.cleaned_data['skills']
+            )
+
+            login(request, user)
+            return redirect('engineer_dashboard')
+    else:
+        form = EngineerRegisterForm()
+
+    return render(request, 'register_engineer.html', {'form': form})
+
+
+def register_customer(request):
+    if request.method == 'POST':
+        form = CustomerRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+
+            CustomerProfile.objects.create(
+                user=user,
+                phone=form.cleaned_data['phone'],
+                address=form.cleaned_data['address']
+            )
+
+            login(request, user)
+            return redirect('customer_dashboard')
+    else:
+        form = CustomerRegisterForm()
+
+    return render(request, 'register_customer.html', {'form': form})
+
 
 
 def landing(request):
     return render(request, 'landingpage.html')
 
+def customer_dash(request):
+    return render(request, 'customer_dashboard.html')
 
+def engineer_dash(request):
+    return render(request, 'engineer_dashboard.html')
 
-
-
-# from .forms import EngineerSignupForm
-# from .models import Engineer
-
-# def engineer_signup(request):
-#     if request.method == 'POST':
-#         form = EngineerSignupForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             engineer = form.save(commit=False)
-#             engineer.set_password(form.cleaned_data['password'])
-#             engineer.save()
-#             return redirect('engineer_login')  
-#     else:
-#         form = EngineerSignupForm()
-
-#     return render(request, 'engineer_signup.html', {'form': form})
-
-
-# def engineer_directory(request):
-#     engineers = Engineer.objects.all()
-#     return render(request, 'engineer_directory.html', {'engineers': engineers})
-
-
-
-
-
-
-# def engineer_login(request):
-#     if request.method == 'POST':
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#         user = authenticate(request, username=email, password=password)
-#         if user is not None:
-#             login(request, user)
-#             return redirect('engineer_directory')  # You can change this
-#         else:
-#             return render(request, 'engineer_login.html', {'error': 'Invalid login credentials'})
-#     return render(request, 'engineer_login.html')
+def engineer_apply(request):
+    context = {
+        "EMAILJS_PUBLIC_KEY": settings.EMAILJS_PUBLIC_KEY,
+        "EMAILJS_SERVICE_ID": settings.EMAILJS_SERVICE_ID,
+        "EMAILJS_TEMPLATE_ID": settings.EMAILJS_TEMPLATE_ID,
+    }
+    return render(request, 'engineer_apply.html',context)

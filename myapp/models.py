@@ -1,34 +1,53 @@
+# models.py
 
+from django.contrib.auth.models import User
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-# class EngineerManager(BaseUserManager):
-#     def create_user(self, email, name, phone, password=None):
-#         if not email:
-#             raise ValueError('Engineers must have an email address')
-#         email = self.normalize_email(email)
-#         user = self.model(email=email, name=name, phone=phone)
-#         user.set_password(password)
-#         user.save(using=self._db)
-#         return user
+class EngineerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='engineer_profile')
+    phone = models.CharField(max_length=20)
+    skills = models.TextField()
+    is_available = models.BooleanField(default=True)
+    on_vacation = models.BooleanField(default=False)
+    rating = models.FloatField(default=0)
+    avatar = models.ImageField(upload_to='avatars/', blank=True)
 
-# class Engineer(AbstractBaseUser):
-    # email = models.EmailField(unique=True)
-    # name = models.CharField(max_length=100)
-    # phone = models.CharField(max_length=15)
-    # skills = models.TextField(blank=True)
-    # profile_pic = models.ImageField(upload_to='engineers/', blank=True, null=True)
-    # is_active = models.BooleanField(default=True)
-    # is_admin = models.BooleanField(default=False)
+class CustomerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer_profile')
+    phone = models.CharField(max_length=20)
+    address = models.TextField(blank=True)
 
-    # objects = EngineerManager()
+class ChatSession(models.Model):
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_chats')
+    engineer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='engineer_chats')
+    created = models.DateTimeField(auto_now_add=True)
 
-    # USERNAME_FIELD = 'email'
-    # REQUIRED_FIELDS = ['name', 'phone']
+class Message(models.Model):
+    chat = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField(blank=True)
+    image = models.ImageField(upload_to='chat_images/', blank=True, null=True)
+    audio = models.FileField(upload_to='chat_audio/', blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
-    # def __str__(self):
-    #     return self.email
+class Quotation(models.Model):
+    engineer = models.ForeignKey(EngineerProfile, on_delete=models.CASCADE)
+    chat = models.ForeignKey(ChatSession, on_delete=models.CASCADE)
+    items = models.JSONField()  # List of dicts: [{material, qty, price}]
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    created = models.DateTimeField(auto_now_add=True)
 
-    # @property
-    # def is_staff(self):
-    #     return self.is_admin
+class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quotation = models.ForeignKey(Quotation, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, default='pending')
+    reference = models.CharField(max_length=100)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created = models.DateTimeField(auto_now_add=True)
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)
+    is_read = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)

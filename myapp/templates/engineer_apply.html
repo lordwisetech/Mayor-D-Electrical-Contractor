@@ -1,0 +1,190 @@
+{% load static %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Engineer Screening Form for Mayor D Electrical Services. Only certified professionals will be contacted.">
+<meta name="keywords" content="Electrical Engineer, Screening Form, Mayor D, Electrical Services, Professional Engineers">
+  <title>Engineer Screening – Mayor D</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+    }
+     .logo {
+      width: 100px;
+      margin-bottom: 2rem;
+    }
+
+    #torch {
+      transition: transform 0.05s ease-out;
+      text-shadow: 0 0 10px #00ffcc;
+      filter: drop-shadow(0 0 8px #00ffee);
+    }
+
+    .flashlight-container {
+      text-align: center;
+      padding: 15vh 2rem 5vh;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section {
+      max-width: 800px;
+      margin: 4rem auto;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 15px;
+      backdrop-filter: blur(4px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .section h2 {
+      color: #00ffcc;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+
+    .section label {
+      display: block;
+      margin-top: 1.2rem;
+      font-weight: bold;
+      color: #00ffaa;
+    }
+
+    .section input,
+    .section textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.3rem;
+      background: #111;
+      border: 1px solid #00ffcc44;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .section textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .btn-glow {
+      background: #00ffcc;
+      color: #000;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 0 15px #00ffaa88;
+      transition: 0.3s ease;
+      margin-top: 1.5rem;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .btn-glow:hover {
+      background: #00ffaa;
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffaaaa;
+    }
+
+    .flashlight {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.98) 40%);
+      mix-blend-mode: screen;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+<div class="flashlight-container">
+  <img src="{% static 'images/logo.png' %}" alt="Mayor D Logo" class="logo">
+  <div class="section">
+    <h2>Electrical Engineer Screening Form</h2>
+    <p>Only certified professionals will be contacted. Answer honestly and precisely.</p>
+
+    <form id="engineerScreenForm">
+      <label>Email Address:</label>
+      <input type="email" name="email" required>
+
+      <label>Years of experience in electrical work?</label>
+      <input type="text" name="experience" required>
+
+      <label>Have you worked on residential or industrial installations?</label>
+      <textarea name="project_type" required></textarea>
+
+      <label>List the electrical tools or machines you're confident using:</label>
+      <textarea name="tools" required></textarea>
+
+      <label>⚡ Electrical Test Questions:</label>
+
+      <label>Q1: What size breaker would you use for a 2.5mm² cable?</label>
+      <input type="text" name="q1" required>
+
+      <label>Q2: What does the color code brown, blue, and green/yellow represent?</label>
+      <input type="text" name="q2" required>
+
+      <label>Q3: How do you test a neutral-earth fault?</label>
+      <input type="text" name="q3" required>
+
+      <button type="submit" class="btn-glow">Submit My Screening</button>
+    </form>
+  </div>
+</div>
+
+<div class="flashlight"></div>
+
+<!-- ENV VARS from Django -->
+<script>
+  window.EMAILJS_PUBLIC_KEY = "('JCXRpOY2fFf3lDLSO')";
+  window.EMAILJS_SERVICE_ID = "('service_zhvni0b')";
+  window.EMAILJS_TEMPLATE_ID = "('template_0ykdibo')";
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  // Clean env setup
+   window.EMAILJS_PUBLIC_KEY = "{{ EMAILJS_PUBLIC_KEY }}";
+  window.EMAILJS_SERVICE_ID = "{{ EMAILJS_SERVICE_ID }}";
+  window.EMAILJS_TEMPLATE_ID = "{{ EMAILJS_TEMPLATE_ID }}";
+
+  
+  // Init EmailJS
+  (function() {
+    emailjs.init(window.EMAILJS_PUBLIC_KEY);
+  })();
+
+  // Hook up the form
+  document.getElementById('engineerScreenForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    emailjs.sendForm(window.EMAILJS_SERVICE_ID, window.EMAILJS_TEMPLATE_ID, this)
+      .then(function(response) {
+        console.log('SUCCESS!', response.status, response.text);
+        alert('Screening submitted successfully! We’ll contact you if qualified.');
+        e.target.reset();
+      }, function(error) {
+        console.error('FAILED >>>', error);
+        alert('Something went wrong. Check the console for details.');
+      });
+  });
+</script>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!-- {% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,17 +67,8 @@
   </style>
 </head>
 <body>
-  <h1>Available Engineers</h1>
+  <h1>customer dash</h1>
 
-  <div class="grid">
-    {% for engineer in engineers %}
-      <div class="card">
-        <img src="{{ engineer.profile_pic.url }}" alt="{{ engineer.name }}" class="profile-pic">
-        <div class="engineer-name">{{ engineer.name }}</div>
-      </div>
-    {% empty %}
-      <p>No engineers available right now.</p>
-    {% endfor %}
-  </div>
+  
 </body>
-</html> -->
+</html>
