@@ -128,4 +128,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-AUTH_USER_MODEL = 'myapp.Engineer'  # Replace 'myapp' with your actual app name
+# AUTH_USER_MODEL = 'myapp.Engineer'  # Replace 'myapp' with your actual app name

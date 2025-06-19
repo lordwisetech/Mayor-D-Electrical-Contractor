@@ -13,22 +13,22 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 #         return user
 
 # class Engineer(AbstractBaseUser):
-    email = models.EmailField(unique=True)
-    name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=15)
-    skills = models.TextField(blank=True)
-    profile_pic = models.ImageField(upload_to='engineers/', blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
+    # email = models.EmailField(unique=True)
+    # name = models.CharField(max_length=100)
+    # phone = models.CharField(max_length=15)
+    # skills = models.TextField(blank=True)
+    # profile_pic = models.ImageField(upload_to='engineers/', blank=True, null=True)
+    # is_active = models.BooleanField(default=True)
+    # is_admin = models.BooleanField(default=False)
 
-    objects = EngineerManager()
+    # objects = EngineerManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'phone']
+    # USERNAME_FIELD = 'email'
+    # REQUIRED_FIELDS = ['name', 'phone']
 
-    def __str__(self):
-        return self.email
+    # def __str__(self):
+    #     return self.email
 
-    @property
-    def is_staff(self):
-        return self.is_admin
+    # @property
+    # def is_staff(self):
+    #     return self.is_admin
