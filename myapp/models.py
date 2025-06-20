@@ -51,3 +51,17 @@ class Notification(models.Model):
     message = models.CharField(max_length=255)
     is_read = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
+
+
+class EngineerScreening(models.Model):
+    email = models.EmailField()
+    experience = models.TextField()
+    project_type = models.TextField()
+    tools = models.TextField()
+    q1 = models.TextField()
+    q2 = models.TextField()
+    q3 = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

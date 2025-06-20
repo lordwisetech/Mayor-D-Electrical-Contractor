@@ -160,11 +160,10 @@
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
   // Clean env setup
-   window.EMAILJS_PUBLIC_KEY = "{{ EMAILJS_PUBLIC_KEY }}";
+  window.EMAILJS_PUBLIC_KEY = "{{ EMAILJS_PUBLIC_KEY }}";
   window.EMAILJS_SERVICE_ID = "{{ EMAILJS_SERVICE_ID }}";
   window.EMAILJS_TEMPLATE_ID = "{{ EMAILJS_TEMPLATE_ID }}";
 
-  
   // Init EmailJS
   (function() {
     emailjs.init(window.EMAILJS_PUBLIC_KEY);
@@ -174,6 +173,7 @@
   document.getElementById('engineerScreenForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
+    // 1. Send email via EmailJS
     emailjs.sendForm(window.EMAILJS_SERVICE_ID, window.EMAILJS_TEMPLATE_ID, this)
       .then(function(response) {
         console.log('SUCCESS!', response.status, response.text);
@@ -183,8 +183,17 @@
         console.error('FAILED >>>', error);
         alert('Something went wrong. Check the console for details.');
       });
+
+    // 2. Send form data to Django backend
+    fetch('/engineer/apply/save/', {
+      method: 'POST',
+      body: new FormData(this),
+    }).then(res => res.json())
+      .then(data => console.log("Saved to DB:", data))
+      .catch(err => console.error("DB Save Failed:", err));
   });
 </script>
+
 
 </body>
 </html>

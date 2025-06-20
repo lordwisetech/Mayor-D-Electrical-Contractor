@@ -3,8 +3,30 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from .forms import EngineerRegisterForm, CustomerRegisterForm
-from .models import EngineerProfile, CustomerProfile
+from .models import EngineerProfile, CustomerProfile,EngineerScreening
 from django.contrib.auth.models import User
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
+
+@csrf_exempt
+def save_screening_data(request):
+    if request.method == 'POST':
+        data = request.POST
+        EngineerScreening.objects.create(
+            email=data.get('email'),
+            experience=data.get('experience'),
+            project_type=data.get('project_type'),
+            tools=data.get('tools'),
+            q1=data.get('q1'),
+            q2=data.get('q2'),
+            q3=data.get('q3'),
+        )
+        return JsonResponse({'status': 'saved'})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
 
 def register_engineer(request):
     if request.method == 'POST':
