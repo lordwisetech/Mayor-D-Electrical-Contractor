@@ -1,6 +1,82 @@
-<h2>Join as an Engineer</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Register</button>
-</form>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Engineer Registration</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: #000;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 2rem;
+      margin-top: 10vh;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      backdrop-filter: blur(6px);
+    }
+
+    h2 {
+      text-align: center;
+      color: #00ffcc;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1.2rem;
+      font-weight: bold;
+      color: #00ffaa;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.4rem;
+      background: #111;
+      border: 1px solid #00ffcc44;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    button {
+      background: #00ffcc;
+      color: #000;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-weight: bold;
+      box-shadow: 0 0 15px #00ffaa88;
+      transition: 0.3s ease;
+      margin-top: 2rem;
+      width: 100%;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background: #00ffaa;
+      transform: scale(1.03);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Join as an Engineer</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Register</button>
+    </form>
+  </div>
+</body>
+</html>

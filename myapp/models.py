@@ -52,8 +52,13 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
-
 class EngineerScreening(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]
+
     email = models.EmailField()
     experience = models.TextField()
     project_type = models.TextField()
@@ -62,6 +67,7 @@ class EngineerScreening(models.Model):
     q2 = models.TextField()
     q3 = models.TextField()
     submitted_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
 
     def __str__(self):
         return self.email
