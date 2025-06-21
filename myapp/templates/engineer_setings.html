@@ -120,27 +120,37 @@
 
   <div class="settings-container">
   <h2>Engineer Profile Settings</h2>
+  
 
-  <form>
-    <label for="phone">Phone Number</label>
-    <input type="text" id="phone" placeholder="Enter your phone number">
+  <form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
 
-    <label for="skills">Your Skills</label>
-    <textarea id="skills" rows="4" placeholder="List your key electrical skills..."></textarea>
+  <label for="phone">Phone Number</label>
+  <input type="text" id="phone" name="phone" value="{{ profile.phone }}">
 
-    <div class="checkbox-group">
-      <label><input type="checkbox" id="available"> Available for Jobs</label>
-      <label><input type="checkbox" id="vacation"> On Vacation</label>
-    </div>
+  <label for="skills">Your Skills</label>
+  <textarea id="skills" name="skills" rows="4">{{ profile.skills }}</textarea>
 
-    <label for="rating">Rating</label>
-    <input type="text" id="rating" placeholder="e.g. 4.5">
+  <div class="checkbox-group">
+    <label>
+      <input type="checkbox" id="available" name="is_available" {% if profile.is_available %}checked{% endif %}>
+      Available for Jobs
+    </label>
+    <label>
+      <input type="checkbox" id="vacation" name="on_vacation" {% if profile.on_vacation %}checked{% endif %}>
+      On Vacation
+    </label>
+  </div>
 
-    <label for="avatar">Profile Picture</label>
-    <input type="file" id="avatar">
+  <label for="rating">Rating</label>
+  <input type="text" id="rating" name="rating" value="{{ profile.rating }}">
 
-    <button type="submit" class="btn-save">⚡ Save Changes</button>
-  </form>
+  <label for="avatar">Profile Picture</label>
+  <input type="file" id="avatar" name="avatar">
+
+  <button type="submit" class="btn-save">⚡ Save Changes</button>
+</form>
+
 </div>
 
   {% include 'partials/engineer_tabs.html' %}

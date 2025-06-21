@@ -80,9 +80,13 @@ def landing(request):
 def customer_dash(request):
     return render(request, 'customer_dashboard.html')
 
+
+
+# engineer dashboard view
 @login_required
 def engineer_dash(request):
-    return render(request, 'engineer_dashboard.html')
+    profile = EngineerProfile.objects.filter(user=request.user).first()
+    return render(request, 'engineer_dashboard.html', {'profile': profile})
 
 def engineer_apply(request):
     context = {
@@ -112,8 +116,29 @@ def engineer_logout(request):
 
 
 
+
+
 @login_required
 def engineer_settings(request):
+    user = request.user
     
+    # Get or create profile instance
+    profile, created = EngineerProfile.objects.get_or_create(user=user)
 
-    return render(request, 'engineer_setings.html')
+    if request.method == 'POST':
+        profile.phone = request.POST.get('phone', '')
+        profile.skills = request.POST.get('skills', '')
+        profile.is_available = bool(request.POST.get('available'))
+        profile.on_vacation = bool(request.POST.get('vacation'))
+        profile.rating = request.POST.get('rating') or 0.0
+
+        if 'avatar' in request.FILES:
+            profile.avatar = request.FILES['avatar']
+
+        profile.save()
+        return redirect('settings_engineer')  # Redirect to same page or dashboard
+
+    context = {
+        'profile': profile
+    }
+    return render(request, 'engineer_setings.html', context)

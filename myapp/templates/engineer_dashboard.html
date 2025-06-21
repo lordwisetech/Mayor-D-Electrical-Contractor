@@ -40,13 +40,12 @@ header {
 }
 
 .profile-pic {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #00ffcc;
-  margin-bottom: 0.5rem;
-}
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #FFD700;
+  }
 
 .info-card {
   background: rgba(255, 255, 255, 0.05);
@@ -86,7 +85,13 @@ header {
   </div>
 
   <div class="profile-box">
-    <img src="{% static 'images/default-eng.png' %}" class="profile-pic" alt="Engineer Picture">
+   {% if profile and profile.avatar %}
+  <img src="{{ profile.avatar.url }}" alt="Profile Picture">
+{% else %}
+  <img src="{% static 'images/logo.png' %}" alt="Default">
+{% endif %}
+
+
     <div><strong>{{ request.user.email }}</strong></div>
   </div>
 
