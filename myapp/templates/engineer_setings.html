@@ -1,6 +1,22 @@
-{% load static %}
 
+
+
+
+
+
+
+
+
+{% load static %}
 {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+</head>
 <style>
 
   body {
@@ -100,8 +116,9 @@
     transform: scale(1.02);
   }
 </style>
+<body>
 
-<div class="settings-container">
+  <div class="settings-container">
   <h2>Engineer Profile Settings</h2>
 
   <form>
@@ -126,5 +143,7 @@
   </form>
 </div>
 
-{% include 'partials/engineer_tabs.html' %}
+  {% include 'partials/engineer_tabs.html' %}
 {% endblock %}
+</body>
+</html>
