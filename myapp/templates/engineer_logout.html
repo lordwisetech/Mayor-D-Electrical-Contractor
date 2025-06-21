@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Logged Out</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding-top: 20vh;
+    }
+
+    h1 {
+      color: #00ffcc;
+    }
+
+    a {
+      color: #00ffaa;
+      text-decoration: none;
+      font-weight: bold;
+      border: 2px solid #00ffaa;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: 0.3s ease;
+    }
+
+    a:hover {
+      background: #00ffaa;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>You have been logged out.</h1>
+  <p><a href="{% url 'engineer_login' %}">Login Again</a></p>
+</body>
+</html>

@@ -5,8 +5,9 @@ from django.shortcuts import render, redirect
 from .forms import EngineerRegisterForm, CustomerRegisterForm
 from .models import EngineerProfile, CustomerProfile,EngineerScreening
 from django.contrib.auth.models import User
-
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
@@ -79,6 +80,7 @@ def landing(request):
 def customer_dash(request):
     return render(request, 'customer_dashboard.html')
 
+@login_required
 def engineer_dash(request):
     return render(request, 'engineer_dashboard.html')
 
@@ -89,3 +91,29 @@ def engineer_apply(request):
         "EMAILJS_TEMPLATE_ID": settings.EMAILJS_TEMPLATE_ID,
     }
     return render(request, 'engineer_apply.html',context)
+
+
+def engineer_login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('engineer_dashboard')
+        else:
+            messages.error(request, 'Invalid login credentials.')
+
+    return render(request, 'engineer_login.html')
+
+def engineer_logout(request):
+    logout(request)
+    return render(request, 'engineer_logout.html')
+
+
+
+@login_required
+def engineer_settings(request):
+    
+
+    return render(request, 'engineer_setings.html')

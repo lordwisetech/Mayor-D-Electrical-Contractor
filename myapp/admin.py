@@ -65,3 +65,9 @@ We wish you all the best in your future endeavors.
 class EngineerScreeningAdmin(admin.ModelAdmin):
     list_display = ('email', 'experience', 'submitted_at')
     actions = [accept_engineer, reject_engineer]
+
+
+admin.site.site_header = "Mayor D Electrical Contractor Admin"
+admin.site.site_title = "Mayor D Control Panel"
+admin.site.index_title = "Welcome to Mayor D Electrical Contractor Admin"
+# Ensure the admin interface is user-friendly

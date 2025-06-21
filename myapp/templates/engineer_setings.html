@@ -1,0 +1,130 @@
+{% load static %}
+
+{% block content %}
+<style>
+
+  body {
+  background-color: #121212; /* Deep dark background */
+  color: #00ffcc; /* White text for contrast */
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+  :root {
+    --primary: #FFD700; /* Bright Yellow */
+    --dark: #00ffcc;    /* Dark Gray/Slate */
+    --light-bg: rgba(255, 255, 255, 0.05);
+    --accent: #FFB300;  /* Golden-orange accent */
+  }
+
+  .settings-container {
+    max-width: 720px;
+    margin: 3rem auto;
+    background: var(--light-bg);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', sans-serif;
+    border: 1px solid var(--primary);
+  }
+
+  .settings-container h2 {
+    text-align: center;
+    color: var(--dark);
+    margin-bottom: 2rem;
+    font-weight: bold;
+  }
+
+  .settings-container label {
+    display: block;
+    font-weight: 600;
+    margin-top: 1rem;
+    color: var(--dark);
+  }
+
+  .settings-container input[type="text"],
+  .settings-container input[type="email"],
+  .settings-container input[type="file"],
+  .settings-container textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #00ffcc;
+    border-radius: 0.5rem;
+    margin-top: 0.3rem;
+    background: #fffdf3;
+    transition: border 0.3s, background 0.3s;
+  }
+
+  .settings-container input:focus,
+  .settings-container textarea:focus {
+    border-color: var(--primary);
+    background-color: #fffde5;
+    outline: none;
+  }
+
+  .settings-container textarea {
+    resize: vertical;
+  }
+
+  .checkbox-group {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  .checkbox-group label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--dark);
+  }
+
+  .btn-save {
+    margin-top: 2rem;
+    width: 100%;
+    background: var(--primary);
+    color: #000;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s;
+  }
+
+  .btn-save:hover {
+    background: var(--accent);
+    transform: scale(1.02);
+  }
+</style>
+
+<div class="settings-container">
+  <h2>Engineer Profile Settings</h2>
+
+  <form>
+    <label for="phone">Phone Number</label>
+    <input type="text" id="phone" placeholder="Enter your phone number">
+
+    <label for="skills">Your Skills</label>
+    <textarea id="skills" rows="4" placeholder="List your key electrical skills..."></textarea>
+
+    <div class="checkbox-group">
+      <label><input type="checkbox" id="available"> Available for Jobs</label>
+      <label><input type="checkbox" id="vacation"> On Vacation</label>
+    </div>
+
+    <label for="rating">Rating</label>
+    <input type="text" id="rating" placeholder="e.g. 4.5">
+
+    <label for="avatar">Profile Picture</label>
+    <input type="file" id="avatar">
+
+    <button type="submit" class="btn-save">⚡ Save Changes</button>
+  </form>
+</div>
+
+{% include 'partials/engineer_tabs.html' %}
+{% endblock %}
