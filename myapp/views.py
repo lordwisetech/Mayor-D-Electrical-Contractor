@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
-
+#save screening data
 @csrf_exempt
 def save_screening_data(request):
     if request.method == 'POST':
@@ -29,6 +29,8 @@ def save_screening_data(request):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
+
+#enginerr register
 def register_engineer(request):
     if request.method == 'POST':
         form = EngineerRegisterForm(request.POST)
@@ -51,6 +53,8 @@ def register_engineer(request):
     return render(request, 'register_engineer.html', {'form': form})
 
 
+
+#customer Register
 def register_customer(request):
     if request.method == 'POST':
         form = CustomerRegisterForm(request.POST)
@@ -73,10 +77,13 @@ def register_customer(request):
     return render(request, 'register_customer.html', {'form': form})
 
 
-
+#landing page
 def landing(request):
     return render(request, 'landingpage.html')
 
+
+
+#customer dashboard
 def customer_dash(request):
     return render(request, 'customer_dashboard.html')
 
@@ -88,6 +95,8 @@ def engineer_dash(request):
     profile = EngineerProfile.objects.filter(user=request.user).first()
     return render(request, 'engineer_dashboard.html', {'profile': profile})
 
+
+#engineer apply
 def engineer_apply(request):
     context = {
         "EMAILJS_PUBLIC_KEY": settings.EMAILJS_PUBLIC_KEY,
@@ -97,6 +106,7 @@ def engineer_apply(request):
     return render(request, 'engineer_apply.html',context)
 
 
+#engineer login
 def engineer_login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -110,6 +120,7 @@ def engineer_login(request):
 
     return render(request, 'engineer_login.html')
 
+#enginer logout
 def engineer_logout(request):
     logout(request)
     return render(request, 'engineer_logout.html')
@@ -117,7 +128,7 @@ def engineer_logout(request):
 
 
 
-
+#engineer account settings
 @login_required
 def engineer_settings(request):
     user = request.user
@@ -127,16 +138,25 @@ def engineer_settings(request):
 
     if request.method == 'POST':
         profile.phone = request.POST.get('phone', '')
-        profile.skills = request.POST.get('skills', '')
+        profile.Bio = request.POST.get('bio', '')
         profile.is_available = bool(request.POST.get('available'))
         profile.on_vacation = bool(request.POST.get('vacation'))
         profile.rating = request.POST.get('rating') or 0.0
+       
+        profile.is_available = 'is_available' in request.POST
+        profile.on_vacation = 'on_vacation' in request.POST
+
+        profile.surname = request.POST.get('surname')
+        # profile.adress = request.POST.get('adress')
+        profile.Specialization = request.POST.get('specialization')
+        profile.profesional_summary = request.POST.get('professional_summary')
+        
 
         if 'avatar' in request.FILES:
             profile.avatar = request.FILES['avatar']
 
         profile.save()
-        return redirect('settings_engineer')  # Redirect to same page or dashboard
+        return redirect('settings_engineer')  #  Redirect to same page or dashboard
 
     context = {
         'profile': profile

@@ -6,11 +6,21 @@ from django.db import models
 class EngineerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='engineer_profile')
     phone = models.CharField(max_length=20)
-    skills = models.TextField()
+    Bio = models.TextField()
     is_available = models.BooleanField(default=True)
     on_vacation = models.BooleanField(default=False)
     rating = models.FloatField(default=0)
     avatar = models.ImageField(upload_to='avatars/', blank=True)
+    surname = models.CharField(max_length=200, null=True, blank=True)
+
+    Longtitude = models.FloatField( null=True, blank=True)
+    Latitude = models.FloatField( null=True, blank=True)
+    
+    Specialization = models.TextField(max_length=400, null=True, blank=True)
+    profesional_summary = models.TextField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        return  f" Engineer. {self.user.username}"
 
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer_profile')
