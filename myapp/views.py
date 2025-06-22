@@ -42,7 +42,7 @@ def register_engineer(request):
             EngineerProfile.objects.create(
                 user=user,
                 phone=form.cleaned_data['phone'],
-                skills=form.cleaned_data['skills']
+                
             )
 
             login(request, user)
