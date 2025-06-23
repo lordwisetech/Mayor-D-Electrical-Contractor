@@ -139,7 +139,7 @@
       {% if profile.avatar %}
         <img src="{{ profile.avatar.url }}" alt="Profile Picture">
       {% else %}
-        <img src="{% static 'images/slide3.jpg' %}" alt="No Profile">
+        <img src="{% static 'images/logo.png' %}" alt="No Profile">
       {% endif %}
     </div>
     <div class="bio-text">{{ profile.Bio|default:"No bio provided yet." }}</div>

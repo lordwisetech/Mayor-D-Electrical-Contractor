@@ -154,6 +154,7 @@ def engineer_settings(request):
 
         if 'avatar' in request.FILES:
             profile.avatar = request.FILES['avatar']
+            print("Uploaded:", profile.avatar.name)
 
         profile.save()
         return redirect('settings_engineer')  #  Redirect to same page or dashboard
