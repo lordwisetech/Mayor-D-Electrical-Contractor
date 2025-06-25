@@ -3,13 +3,14 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from .forms import EngineerRegisterForm, CustomerRegisterForm
-from .models import EngineerProfile, CustomerProfile,EngineerScreening
+from .models import EngineerProfile, CustomerProfile,EngineerScreening,CodeShare,Job
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+ 
 
 #save screening data
 @csrf_exempt
@@ -66,7 +67,7 @@ def register_customer(request):
             CustomerProfile.objects.create(
                 user=user,
                 phone=form.cleaned_data['phone'],
-                address=form.cleaned_data['address']
+                
             )
 
             login(request, user)
@@ -84,10 +85,50 @@ def landing(request):
 
 
 #customer dashboard
+
+@login_required
 def customer_dash(request):
+    success = False
+
+    if request.method == 'POST':
+        job_title = request.POST.get('job_title')
+        description = request.POST.get('description')
+        location_name = request.POST.get('location_name')
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
+
+        if job_title and description and location_name:
+            Job.objects.create(
+                customer=request.user,
+                job_title=job_title,
+                description=description,
+                location_name=location_name,
+                latitude=latitude,
+                longitude=longitude
+            )
+            success = True
+
+    return render(request, 'customer_dashboard.html', {'success': success})
+
+    if request.method == 'POST':
+        job_title = request.POST.get('job_title')
+        description = request.POST.get('description')
+        location_name = request.POST.get('location_name')
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
+
+        if job_title and description and location_name and latitude and longitude:
+            Job.objects.create(
+                customer=request.user,
+                job_title=job_title,
+                description=description,
+                location_name=location_name,
+                latitude=latitude,
+                longitude=longitude
+            )
+            return redirect('customer_dashboard')  # or wherever you want
+
     return render(request, 'customer_dashboard.html')
-
-
 
 # engineer dashboard view
 @login_required
@@ -163,3 +204,41 @@ def engineer_settings(request):
         'profile': profile
     }
     return render(request, 'engineer_setings.html', context)
+
+
+#customer job posting
+def post_job(request):
+    return render(request, 'postJob.html')
+
+
+#code sharing
+def codeShare(request):
+    profile, created = CodeShare.objects.get_or_create()
+    if request.method == 'POST':
+        profile.sharecode = request.POST.get('ShareCode')
+        profile.save()
+    context = {
+        'profile': profile
+    }
+        
+    return render(request, 'fileSharing.html', context)
+
+
+#customer login
+def customer_login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('customer_dashboard')
+        else:
+            messages.error(request, 'Invalid login credentials.')
+
+    return render(request, 'customer_login.html')
+ 
+
+def customer_logout(request):
+    logout(request)
+    return render(request, 'customer_logout.html')

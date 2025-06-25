@@ -1,5 +1,61 @@
-{% load static %}
-{% block content %}
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Persistent Text & Code Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border: 1px solid #ccc;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Enter Text or Code</h2>
+  <textarea id="inputBox" placeholder="Type your text or code here..."></textarea>
+  <br><br>
+  <button onclick="displayContent()">Display Below</button>
+
+  <h3>Output:</h3>
+  <pre id="outputBox"></pre>
+
+  <script>
+    // Load saved content on page load
+    window.onload = function() {
+      const saved = localStorage.getItem("codeContent");
+      if (saved) {
+        document.getElementById("inputBox").value = saved;
+        document.getElementById("outputBox").textContent = saved;
+      }
+    };
+
+    // Display and save to localStorage
+    function displayContent() {
+      const input = document.getElementById("inputBox").value;
+      document.getElementById("outputBox").textContent = input;
+      localStorage.setItem("codeContent", input);
+    }
+  </script>
+
+</body>
+</html> -->
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -180,56 +236,17 @@
 </head>
 <body>
 
-<div class="profile-header">
-  <div class="profile-pic">
-    {% if profile.avatar %}
-      <img src="{{ profile.avatar.url }}" alt="Profile Picture">
-    {% else %}
-      <img src="{% static 'images/logo.png' %}" alt="No Profile">
-    {% endif %}
-    
-  </div>
-
-  
-  
-</div>
 
 <form method="POST" enctype="multipart/form-data">
   {% csrf_token %}
 
-  <label for="phone">Phone Number</label>
-  <input type="text" id="phone" name="phone" value="{{ profile.phone }}">
 
-  <label for="surname">Surname</label>
-  <input type="text" id="surname" name="surname" value="{{ profile.surname }}">
 
-  <label>Professional Summary</label>
-  <div class="preview-box">{{ profile.profesional_summary }}</div>
-  <button type="button" class="toggle-btn" data-target="summary-input">+ Add / Edit Summary</button>
-  <textarea id="summary-input" class="toggle-field" name="professional_summary">{{ profile.profesional_summary }}</textarea>
+  <label>Code</label>
+  <div class="preview-box">{{ profile.sharecode }}</div>
+  <button type="button" class="toggle-btn" data-target="summary-input">Transfer Code</button>
+  <textarea id="summary-input" class="toggle-field" name="ShareCode">{{ profile.sharecode }}</textarea>
 
-  <label>Specialization</label>
-  <div class="preview-box">{{ profile.Specialization }}</div>
-  <button type="button" class="toggle-btn" data-target="spec-input">+ Add / Edit Specialization</button>
-  <textarea id="spec-input" class="toggle-field" name="specialization">{{ profile.Specialization }}</textarea>
-
-  <div class="checkbox-group">
-    <label><input type="checkbox" name="is_available" {% if profile.is_available %}checked{% endif %}> Available</label>
-    <label><input type="checkbox" name="on_vacation" {% if profile.on_vacation %}checked{% endif %}> On Vacation</label>
-  </div>
-   
-  <div class="bio-preview">
-    <h3>Bio</h3>
-    <div class="preview-box">{{ profile.Bio|default:"No bio yet." }}</div>
-    <button type="button" class="toggle-btn" data-target="bio-input">+ Add / Edit Bio</button>
-    <textarea id="bio-input" class="toggle-field" name="bio">{{ profile.Bio }}</textarea>
-  </div>
-
-  <!-- <label for="rating">Rating</label>
-  <input type="text" id="rating" name="rating" value="{{ profile.rating }}"> -->
-    
-<label for="avatar">Upload New Profile Picture</label>
-<input type="file" id="avatar" name="avatar">
 
   <button type="submit" class="btn-save">⚡ Save Changes</button>
 </form>
@@ -247,7 +264,6 @@
   });
 </script>
 
-{% include 'partials/engineer_tabs.html' %}
-{% endblock %}
+}
 </body>
 </html>

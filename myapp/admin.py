@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from .models import (
     CustomerProfile, EngineerProfile, ChatSession, Message,
-    Quotation, Payment, Notification, EngineerScreening
+    Quotation, Payment, Notification, EngineerScreening,CodeShare, Job
 )
 
 # Register your other models
@@ -14,6 +14,9 @@ admin.site.register(Message)
 admin.site.register(Quotation)
 admin.site.register(Payment)
 admin.site.register(Notification)
+admin.site.register(CodeShare)
+
+admin.site.register(Job)
 
 # Define Accept action
 @admin.action(description="Accept Engineer")

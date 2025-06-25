@@ -3,72 +3,331 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Engineer Directory</title>
+  <title>Customer Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <style>
     body {
+      background-color: #121212;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 1rem;
-      font-family: 'Montserrat', sans-serif;
-      background: #000;
+    }
+
+    .dashboard-container {
+      max-width: 720px;
+      margin: auto;
+      padding: 2rem;
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.07);
+    }
+
+    h2, h3 {
+      text-align: center;
+      color: #FFD700;
+    }
+
+    .post-btn {
+      background: #FFD700;
+      color: #000;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .form-container {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    label {
+      margin-top: 1rem;
+      display: block;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.3rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #2a2a2a;
       color: #fff;
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 2rem;
-      color: #00ffcc;
+    .location-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1.5rem;
+    .location-buttons button {
+      flex: 1;
+      background-color: #333;
+      color: #FFD700;
+      border: 1px solid #FFD700;
+      padding: 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
+    .map-preview {
+      background: #2b2b2b;
+      color: #ccc;
+      padding: 0.7rem;
+      margin-top: 1rem;
+      border-radius: 6px;
+    }
+
+    .engineer-box {
+      background-color: #2b2b2b;
       padding: 1rem;
-      text-align: center;
-      transition: 0.3s;
+      margin-top: 1rem;
+      border-left: 4px solid #FFD700;
+      border-radius: 6px;
     }
 
-    .card:hover {
-      transform: translateY(-5px);
-      background: rgba(0, 255, 204, 0.1);
+    /* Map Modal */
+    #map-popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
     }
 
-    .profile-pic {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 0.5rem;
-      border: 2px solid #00ffcc;
+    .map-box {
+      background: #111;
+      padding: 1rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 600px;
     }
 
-    .engineer-name {
-      font-size: 1rem;
+    #map {
+      height: 400px;
+      border-radius: 8px;
+    }
+
+    .map-actions {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .map-actions button {
+      flex: 1;
+      padding: 0.6rem;
+      border: none;
+      border-radius: 6px;
       font-weight: bold;
-      color: #00ffcc;
+      cursor: pointer;
     }
 
-    @media (max-width: 600px) {
-      .profile-pic {
-        width: 60px;
-        height: 60px;
-      }
-      .engineer-name {
-        font-size: 0.9rem;
-      }
+    .btn-cancel {
+      background: #333;
+      color: #ccc;
     }
+
+    .btn-select {
+      background: #FFD700;
+      color: #000;
+    }
+    .alert-success {
+  background-color: #FFD700;
+  color: #000;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
   </style>
 </head>
 <body>
-  <h1>customer dash</h1>
 
-  
+<div class="dashboard-container">
+  {% if success %}
+  <div class="alert-success" id="alert-box">
+    ✅ Job created! Engineers will attend to it when they see it.
+  </div>
+{% endif %}
+  <h2>⚡ Customer Dashboard</h2>
+
+  <button class="post-btn" onclick="toggleForm()">➕ Post a Job</button>
+
+  <div class="form-container" id="job-form">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="job_title">🧰 Job Title</label>
+      <input type="text" name="job_title" id="job_title" required placeholder="e.g., Fix main breaker">
+
+      <label for="description">📋 Job Description</label>
+      <textarea name="description" id="description" rows="3" required placeholder="Describe what needs fixing..."></textarea>
+
+      <label for="location_name">📍 Location</label>
+      <input type="text" name="location_name" id="location_name" readonly required placeholder="Click a button to select location">
+      <div id="selected-address" class="map-preview">No location selected yet.</div>
+
+      <input type="hidden" name="latitude" id="latitude">
+      <input type="hidden" name="longitude" id="longitude">
+
+      <div class="location-buttons">
+        <button type="button" onclick="useMyLocation()">📡 Use My Location</button>
+        <button type="button" onclick="openMapPopup()">🗺️ Select from Map</button>
+      </div>
+
+      <button type="submit" style="
+        margin-top: 1.5rem;
+        width: 100%;
+        background: #FFD700;
+        color: #000;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s;
+      ">🚀 Submit Job</button>
+    </form>
+  </div>
+
+  <h3 style="margin-top: 2rem;">🔧 Engineers Near You</h3>
+
+  <div class="engineer-box">
+    <strong>FixMaster Electrician</strong><br>
+    ⭐ Rating: 4.8<br>
+    📍 Lagos Island
+  </div>
+
+  <div class="engineer-box">
+    <strong>VoltPro Services</strong><br>
+    ⭐ Rating: 4.9<br>
+    📍 Ikeja, Lagos
+  </div>
+</div>
+
+<!-- MAP MODAL -->
+<div id="map-popup">
+  <div class="map-box">
+    <div id="map"></div>
+    <div class="map-actions">
+      <button class="btn-cancel" onclick="closeMapPopup()">❌ Cancel</button>
+      <button class="btn-select" onclick="selectLocation()">✅ Select</button>
+    </div>
+  </div>
+</div>
+ {% include 'partials/customer_tab.html' %}
+<script>
+  let selectedLat = null;
+  let selectedLng = null;
+  let map, marker;
+
+  function toggleForm() {
+    const form = document.getElementById("job-form");
+    form.style.display = form.style.display === "block" ? "none" : "block";
+  }
+
+  function openMapPopup() {
+    document.getElementById('map-popup').style.display = 'flex';
+
+    setTimeout(() => {
+      map = L.map('map').setView([6.5244, 3.3792], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+
+      map.on('click', function(e) {
+        if (marker) map.removeLayer(marker);
+        marker = L.marker(e.latlng).addTo(map);
+        selectedLat = e.latlng.lat;
+        selectedLng = e.latlng.lng;
+        document.getElementById('latitude').value = selectedLat;
+        document.getElementById('longitude').value = selectedLng;
+        reverseGeocode(selectedLat, selectedLng);
+      });
+    }, 200);
+  }
+
+  function closeMapPopup() {
+    document.getElementById('map-popup').style.display = 'none';
+    if (map) map.remove();
+  }
+
+  function selectLocation() {
+    if (!selectedLat || !selectedLng) return alert("Please pick a location on the map");
+    document.getElementById('latitude').value = selectedLat;
+    document.getElementById('longitude').value = selectedLng;
+    closeMapPopup();
+  }
+
+  function useMyLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        selectedLat = position.coords.latitude;
+        selectedLng = position.coords.longitude;
+        document.getElementById('latitude').value = selectedLat;
+        document.getElementById('longitude').value = selectedLng;
+        reverseGeocode(selectedLat, selectedLng);
+      }, () => {
+        alert("Could not get your location.");
+      });
+    } else {
+      alert("Geolocation not supported by your browser.");
+    }
+  }
+
+  function reverseGeocode(lat, lng) {
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+      .then(res => res.json())
+      .then(data => {
+        const displayName = data.display_name || `Lat: ${lat}, Lng: ${lng}`;
+        document.getElementById("location_name").value = displayName;
+        document.getElementById("selected-address").innerText = displayName;
+      })
+      .catch(() => {
+        document.getElementById("location_name").value = `Lat: ${lat}, Lng: ${lng}`;
+        document.getElementById("selected-address").innerText = `Lat: ${lat}, Lng: ${lng}`;
+      });
+  }
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const alertBox = document.getElementById('alert-box');
+    if (alertBox) {
+      setTimeout(() => {
+        alertBox.style.transition = 'opacity 0.5s ease';
+        alertBox.style.opacity = '0';
+        setTimeout(() => alertBox.remove(), 500); // remove from DOM
+      }, 4000); // 4 seconds
+    }
+  });
+</script>
+
 </body>
 </html>

@@ -1,0 +1,59 @@
+
+<style>
+  .tabs {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #000;
+    display: flex;
+    justify-content: space-around;
+    padding: 0.8rem 0;
+    border-top: 1px solid #FFD700;
+    z-index: 100;
+    top: 80%;
+  }
+
+  .tab {
+    color: #FFD700;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .tab:hover {
+    color: #fff;
+  }
+
+  /* 🖥️ Desktop styles: sidebar instead of bottom bar */
+  @media screen and (min-width: 768px) {
+    .tabs {
+      top: 0;
+      bottom: auto;
+      left: 0;
+      width: 200px;
+      height: 100vh;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      border-top: none;
+      border-right: 1px solid #FFD700;
+      padding: 2rem 1rem;
+      gap: 1rem;
+    }
+
+    .tab {
+      display: block;
+      width: 100%;
+      font-size: 1.1rem;
+    }
+  }
+</style>
+
+<!-- 🌟 Responsive Navigation Tabs -->
+<div class="tabs">
+  <a href="#" class="tab">🏠 Home</a>
+  <a href="#" class="tab">📋 My Jobs</a>
+  <a href="#" class="tab">⚙️ Settings</a>
+  <a href="{% url 'logout' %}" class="tab">🚪 Logout</a>
+</div>

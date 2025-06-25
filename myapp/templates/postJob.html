@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Engineer Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary: #FFD700;
+      --glow: 0 0 10px #00ffcc, 0 0 20px #00ffcc33;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(to bottom, #000, #111);
+      color: #fff;
+    }
+
+    header {
+      background: #00ffcc;
+      padding: 1rem;
+      text-align: center;
+      color: #000;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: var(--glow);
+    }
+
+    .welcome {
+      padding: 1.5rem 1rem 0.5rem;
+      font-size: 1.1rem;
+      text-align: center;
+      color: #00ffaa;
+    }
+
+
+    
+
+   
+  </style>
+</head>
+<body>
+
+  <header>Post Job </header>
+
+  <div class="welcome">
+    there are tons  of enginer
+  </div>
+
+ 
+
+  
+  {% include 'partials/engineer_tabs.html' %}
+
+</body>
+</html>

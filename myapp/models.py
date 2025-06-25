@@ -31,7 +31,16 @@ class EngineerProfile(models.Model):
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer_profile')
     phone = models.CharField(max_length=20)
-    address = models.TextField(blank=True)
+   
+
+# #job upload
+# class Job(models.Model):
+#      customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name='jobs')
+#      title = models.CharField(max_length=200) 
+#      description = models.TextField(blank=True) 
+#      created_at = models.DateTimeField(auto_now_add=True) 
+#      completed = models.BooleanField(default=False) 
+#      def __str__(self): return f"{self.title} - {self.customer.user.username}"
 
 class ChatSession(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_chats')
@@ -87,3 +96,24 @@ class EngineerScreening(models.Model):
 
     def __str__(self):
         return self.email
+
+
+
+class CodeShare(models.Model):
+    sharecode = models.TextField(max_length=200000, null=True, blank=True)
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class Job(models.Model):
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
+    job_title = models.CharField(max_length=255,default="Untitled Job")
+    description = models.TextField()
+    location_name = models.CharField(max_length=255, blank=True, null=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.job_title} by {self.customer.username}"
