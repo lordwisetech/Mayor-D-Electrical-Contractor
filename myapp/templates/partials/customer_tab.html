@@ -52,8 +52,11 @@
 
 <!-- 🌟 Responsive Navigation Tabs -->
 <div class="tabs">
-  <a href="#" class="tab">🏠 Home</a>
-  <a href="#" class="tab">📋 My Jobs</a>
-  <a href="#" class="tab">⚙️ Settings</a>
+  <a href="{% url 'customer_dashboard' %}" class="tab">🏠 Dashboard</a>
+  <a href="{% url 'myjob' %}" class="tab">📋 My Jobs</a>
+  <a href="{% url 'engineer_directory' %}" class="tab">🧑‍🔧 Engineers</a>
+  <a href="" class="tab">💬 Chats</a>
+  <a href="" class="tab">💳 Payments</a>
+  <a href="" class="tab">⚙️ Settings</a>
   <a href="{% url 'logout' %}" class="tab">🚪 Logout</a>
 </div>

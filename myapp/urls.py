@@ -24,7 +24,10 @@ urlpatterns = [
 
 
    path('code/', views.codeShare, name='codeshare'),
-
+   path('myjobs/', views.my_jobs_view, name='myjob'),
+   path('delete-job/<int:job_id>/', views.delete_job, name='delete_job'),
+   path('toggle-job-status/<int:job_id>/', views.toggle_job_status, name='toggle_job_status'),
+   path('engineers/', views.engineer_directory, name='engineer_directory'),
   
 ] 
 if settings.DEBUG:

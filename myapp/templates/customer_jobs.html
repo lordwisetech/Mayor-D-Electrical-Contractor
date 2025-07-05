@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>My Jobs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #121212;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+    }
+
+    .dashboard-container {
+      max-width: 720px;
+      margin: auto;
+      padding: 2rem;
+      background-color: #1e1e1e;
+      border-radius: 12px;
+    }
+
+    .job-card {
+      background-color: #2b2b2b;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-left: 4px solid #FFD700;
+      border-radius: 6px;
+    }
+
+    .job-card h3 {
+      margin: 0 0 0.5rem 0;
+      color: #FFD700;
+    }
+
+    .btn-toggle, .btn-delete {
+      background: #FFD700;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 0.5rem;
+    }
+
+    .btn-delete {
+      background: #ff4c4c;
+      color: white;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #FFD700;
+      color: #000;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.4s, transform 0.4s;
+      z-index: 9999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+  <h2 style="text-align:center; color:#FFD700;">🛠 My Posted Jobs</h2>
+
+  {% for job in jobs %}
+    <div class="job-card" id="job-{{ job.id }}">
+      <h3>{{ job.job_title }}</h3>
+      <p>{{ job.description }}</p>
+      <p><strong>📍 Location:</strong> {{ job.location_name }}</p>
+      <p><strong>Status:</strong> 
+        <span id="status-{{ job.id }}" style="color: {{ job.status|yesno:'#00ff00,#ff3333' }}; font-weight: bold;">
+          {{ job.status|yesno:"Active,Completed" }}
+        </span>
+      </p>
+
+      <button class="btn-toggle" onclick="toggleVisibility({{ job.id }})">🔁 Toggle Visibility</button>
+      <button class="btn-delete" onclick="deleteJob({{ job.id }})">❌ Delete</button>
+    </div>
+  {% empty %}
+    <p style="text-align:center; margin-top:2rem;">You haven't posted any jobs yet.</p>
+  {% endfor %}
+</div>
+
+<div id="toast" class="toast"></div>
+
+{% include 'partials/customer_tab.html' %}
+
+<script>
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
+  }
+
+  function deleteJob(jobId) {
+    fetch(`/delete-job/${jobId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(res => {
+      if (res.ok) {
+        document.getElementById(`job-${jobId}`).remove();
+        showToast("✅ Job deleted");
+      }
+    });
+  }
+
+  function toggleVisibility(jobId) {
+    fetch(`/toggle-job-status/${jobId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      const statusText = document.getElementById(`status-${jobId}`);
+      statusText.innerText = data.status ? 'Active' : 'Completed';
+      statusText.style.color = data.status ? '#00ff00' : '#ff3333';
+      showToast(`👁 Job marked as ${data.status ? 'Active' : 'Completed'}`);
+    });
+  }
+</script>
+</body>
+</html>

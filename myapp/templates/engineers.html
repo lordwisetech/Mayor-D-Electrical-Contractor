@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Engineer Directory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="background-color: #121212; margin: 0; font-family: 'Segoe UI', sans-serif;">
+
+<div class="directory-container">
+  <h2 style="text-align:center; color:#FFD700;">🧑‍🔧 Engineer Directory</h2>
+
+  {% for engineer in engineers %}
+    <div class="engineer-card">
+      
+
+       <div style="display: flex; gap: 1rem; align-items: center;">
+  <img src="{% if engineer.avatar %}{{ engineer.avatar.url }}{% else %}{% static 'images/logo.png' %}{% endif %}"
+       alt="Avatar"
+       style="width:60px; height:60px; border-radius: 50%; object-fit:cover;">
+
+  <div>
+    <h3>{{ engineer.user.username|title }} {{ engineer.surname }}</h3>
+    <p>⚡ <strong>Specialization:</strong> {{ engineer.Specialization|default:"N/A" }}</p>
+    <p>⭐ <strong>Rating:</strong> {{ engineer.rating }}</p>
+    <button onclick="showProfile('{{ engineer.id }}')" class="chat-button">👀 View Profile</button>
+  </div>
+</div>
+
+<!-- 👤 Hidden Full Profile -->
+<div id="profile-{{ engineer.id }}" class="full-profile">
+  <h3>{{ engineer.user.username|title }} {{ engineer.surname }}</h3>
+  <p><strong>Phone:</strong> {{ engineer.phone }}</p>
+  <p><strong>Bio:</strong> {{ engineer.Bio|default:"-" }}</p>
+  <p><strong>Specialization:</strong> {{ engineer.Specialization }}</p>
+  <p><strong>Summary:</strong> {{ engineer.profesional_summary }}</p>
+  <p><strong>Availability:</strong> {{ engineer.is_available|yesno:"Available,Not Available" }}</p>
+  <p><strong>On Vacation:</strong> {{ engineer.on_vacation|yesno:"Yes,No" }}</p>
+  <p><strong>Rating:</strong> {{ engineer.rating }}</p>
+  <p><strong>Latitude:</strong> {{ engineer.Latitude }}</p>
+  <p><strong>Longitude:</strong> {{ engineer.Longtitude }}</p>
+  <button onclick="hideProfile('{{ engineer.id }}')" class="btn-delete">❌ Close</button>
+</div>
+
+      <button class="chat-button">💬 Chat</button>
+    </div>
+  {% empty %}
+    <p style="text-align: center;">No engineers found.</p>
+  {% endfor %}
+</div>
+
+{% include 'partials/customer_tab.html' %}
+
+<style>
+  .directory-container {
+    max-width: 720px;
+    margin: auto;
+    padding: 2rem;
+    background-color: #1e1e1e;
+    border-radius: 12px;
+    color: white;
+  }
+.full-profile {
+  display: none;
+  background-color: #333;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  border-left: 4px solid #FFD700;
+}
+
+  .engineer-card {
+    background-color: #2b2b2b;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #FFD700;
+    border-radius: 6px;
+  }
+
+  .engineer-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: #FFD700;
+  }
+
+  .chat-button {
+    background: #FFD700;
+    color: #000;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 0.8rem;
+  }
+</style>
+<script>
+  function showProfile(id) {
+    document.getElementById(`profile-${id}`).style.display = 'block';
+  }
+
+  function hideProfile(id) {
+    document.getElementById(`profile-${id}`).style.display = 'none';
+  }
+</script>
+
+</body>
+</html>

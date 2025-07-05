@@ -1,7 +1,7 @@
 
 from django.conf import settings
 from django.contrib.auth import login
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import EngineerRegisterForm, CustomerRegisterForm
 from .models import EngineerProfile, CustomerProfile,EngineerScreening,CodeShare,Job
 from django.contrib.auth.models import User
@@ -242,3 +242,33 @@ def customer_login(request):
 def customer_logout(request):
     logout(request)
     return render(request, 'customer_logout.html')
+
+
+
+
+@login_required
+def my_jobs_view(request):
+    jobs = Job.objects.filter(customer=request.user).order_by('-created_at')  # Or use whatever timestamp field you have
+    return render(request, 'customer_jobs.html', {'jobs': jobs})
+
+@login_required
+def delete_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id, customer=request.user)
+    if request.method == 'POST':
+        job.delete()
+        return JsonResponse({'deleted': True})
+
+@login_required
+def toggle_job_status(request, job_id):
+    job = get_object_or_404(Job, id=job_id, customer=request.user)
+    if request.method == 'POST':
+        job.status = not job.status
+        job.save()
+        return JsonResponse({'status': job.status})
+    
+
+    
+@login_required
+def engineer_directory(request):
+    engineers = EngineerProfile.objects.select_related('user').all()
+    return render(request, 'engineers.html', {'engineers': engineers})
