@@ -33,14 +33,6 @@ class CustomerProfile(models.Model):
     phone = models.CharField(max_length=20)
    
 
-# #job upload
-# class Job(models.Model):
-#      customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name='jobs')
-#      title = models.CharField(max_length=200) 
-#      description = models.TextField(blank=True) 
-#      created_at = models.DateTimeField(auto_now_add=True) 
-#      completed = models.BooleanField(default=False) 
-#      def __str__(self): return f"{self.title} - {self.customer.user.username}"
 
 class ChatSession(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_chats')
@@ -55,6 +47,8 @@ class Message(models.Model):
     audio = models.FileField(upload_to='chat_audio/', blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    Longtitude = models.FloatField(null=True, blank=True)
+    Latitude = models.FloatField(null=True, blank=True)
 
 class Quotation(models.Model):
     engineer = models.ForeignKey(EngineerProfile, on_delete=models.CASCADE)

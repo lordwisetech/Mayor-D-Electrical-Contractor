@@ -3,13 +3,15 @@ from django.conf import settings
 from django.contrib.auth import login
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import EngineerRegisterForm, CustomerRegisterForm
-from .models import EngineerProfile, CustomerProfile,EngineerScreening,CodeShare,Job
+from .models import EngineerProfile, CustomerProfile,EngineerScreening,CodeShare,Job,ChatSession,Message
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.db import models
+
  
 
 #save screening data
@@ -272,3 +274,59 @@ def toggle_job_status(request, job_id):
 def engineer_directory(request):
     engineers = EngineerProfile.objects.select_related('user').all()
     return render(request, 'engineers.html', {'engineers': engineers})
+
+
+@login_required
+def open_chat(request, engineer_id):
+    engineer = get_object_or_404(User, pk=engineer_id)
+
+    # Prevent user chatting with self
+    if request.user == engineer:
+        return redirect('somewhere_else')
+
+    chat, created = ChatSession.objects.get_or_create(
+        customer=request.user,
+        engineer=engineer
+    )
+
+    messages = Message.objects.filter(chat=chat).order_by('timestamp')
+
+    return render(request, 'chat_screen.html', {
+        'chat': chat,
+        'messages': messages,
+        'engineer': engineer
+    })
+
+@login_required
+def send_message(request, chat_id):
+    chat = get_object_or_404(ChatSession, id=chat_id)
+    if request.method == 'POST':
+        content = request.POST.get('content', '')
+        Message.objects.create(chat=chat, sender=request.user, content=content)
+    return redirect('chat_screen', engineer_id=chat.engineer.id)
+
+
+
+@login_required
+def chat_inbox(request):
+    user = request.user
+
+    # Get all chat sessions where user is either customer or engineer
+    chats = ChatSession.objects.filter(
+        (models.Q(customer=user) | models.Q(engineer=user)),
+        messages__isnull=False  # Only chats with at least one message
+    ).distinct().select_related('customer', 'engineer').prefetch_related('messages')
+
+    chat_data = []
+    for chat in chats:
+        last_message = chat.messages.last()
+        other_user = chat.engineer if chat.customer == user else chat.customer
+        profile = getattr(other_user, 'engineer_profile', None)
+        chat_data.append({
+            'chat': chat,
+            'other_user': other_user,
+            'profile': profile,
+            'last_message': last_message,
+        })
+
+    return render(request, 'chat/chat_inbox.html', {'chats': chat_data})

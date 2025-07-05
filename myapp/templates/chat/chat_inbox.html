@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>💬 My Chats</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 1.5rem;
+    }
+
+    .chat-inbox {
+      max-width: 720px;
+      margin: auto;
+    }
+
+    .chat-item {
+      display: flex;
+      align-items: center;
+      background: #1e1e1e;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      border-left: 4px solid #FFD700;
+      transition: background 0.2s ease;
+    }
+
+    .chat-item:hover {
+      background: #2c2c2c;
+    }
+
+    .chat-item img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 1rem;
+      object-fit: cover;
+    }
+
+    .chat-info h4 {
+      margin: 0;
+      color: #FFD700;
+    }
+
+    .chat-info p {
+      margin: 0.3rem 0 0;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-inbox">
+    <h2 style="text-align: center; color: #FFD700;">📨 My Messages</h2>
+
+    {% for item in chats %}
+      <a href="{% url 'chat_screen' item.other_user.id %}" style="text-decoration: none;">
+        <div class="chat-item">
+          <img src="{% if item.profile and item.profile.avatar %}{{ item.profile.avatar.url }}{% else %}{% static 'images/logo.png' %}{% endif %}" alt="Avatar">
+          <div class="chat-info">
+            <h4>{{ item.other_user.username|title }}</h4>
+            <p>{{ item.last_message.content|default:"No messages yet."|truncatechars:40 }}</p>
+          </div>
+        </div>
+      </a>
+    {% empty %}
+      <p style="text-align:center;">You don't have any chat sessions yet.</p>
+    {% endfor %}
+  </div>
+  <br><br><br>
+{% include 'partials/customer_tab.html' %}
+</body>
+</html>

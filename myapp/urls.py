@@ -28,6 +28,10 @@ urlpatterns = [
    path('delete-job/<int:job_id>/', views.delete_job, name='delete_job'),
    path('toggle-job-status/<int:job_id>/', views.toggle_job_status, name='toggle_job_status'),
    path('engineers/', views.engineer_directory, name='engineer_directory'),
+   path('chat/<int:engineer_id>/', views.open_chat, name='chat_screen'),
+   path('chat/<int:chat_id>/send/', views.send_message, name='send_message'),
+   path('inbox/', views.chat_inbox, name='chat_inbox'),
+
   
 ] 
 if settings.DEBUG:

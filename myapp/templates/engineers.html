@@ -25,6 +25,9 @@
     <p>⚡ <strong>Specialization:</strong> {{ engineer.Specialization|default:"N/A" }}</p>
     <p>⭐ <strong>Rating:</strong> {{ engineer.rating }}</p>
     <button onclick="showProfile('{{ engineer.id }}')" class="chat-button">👀 View Profile</button>
+    <a href="{% url 'chat_screen' engineer.user.id %}" class="chat-button">💬 Chat</a>
+
+
   </div>
 </div>
 
@@ -43,7 +46,7 @@
   <button onclick="hideProfile('{{ engineer.id }}')" class="btn-delete">❌ Close</button>
 </div>
 
-      <button class="chat-button">💬 Chat</button>
+     
     </div>
   {% empty %}
     <p style="text-align: center;">No engineers found.</p>

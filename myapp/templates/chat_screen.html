@@ -1,0 +1,255 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat with {{ engineer.username }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /> <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <style>
+    body {
+      margin: 0;
+      background-color: #0f0f0f;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+    }
+
+    .chat-container {
+      max-width: 720px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-bottom: 1px solid #FFD700;
+    }
+
+    .chat-header img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .chat-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #FFD700;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 1rem;
+      background: #191919;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .message {
+      max-width: 70%;
+      padding: 0.7rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      position: relative;
+    }
+
+    .message.sent {
+      align-self: flex-end;
+      background-color: #FFD700;
+      color: #000;
+      border-bottom-right-radius: 0;
+    }
+
+    .message.received {
+      align-self: flex-start;
+      background-color: #2a2a2a;
+      color: #fff;
+      border-bottom-left-radius: 0;
+    }
+
+    .timestamp {
+      display: block;
+      font-size: 0.7rem;
+      margin-top: 4px;
+      opacity: 0.6;
+    }
+
+    .chat-form {
+      display: flex;
+      padding: 1rem;
+      background: #1e1e1e;
+      border-top: 1px solid #FFD700;
+      gap: 0.5rem;
+    }
+
+    .chat-form textarea {
+      flex: 1;
+      resize: none;
+      background: #2b2b2b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.6rem;
+      font-size: 1rem;
+    }
+
+    .chat-form button {
+      background-color: #FFD700;
+      color: black;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .action-menu {
+      position: relative;
+    }
+
+    .action-list {
+      position: absolute;
+      bottom: 2.5rem;
+      right: 0;
+      background: #2b2b2b;
+      padding: 0.5rem;
+      border-radius: 6px;
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 10;
+    }
+
+    .action-list button {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .action-menu.active .action-list {
+      display: flex;
+    }
+  </style>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+</head>
+<body>
+<div class="chat-container">
+  <div class="chat-header">
+    <img src="{% if engineer_profile.avatar %}{{ engineer_profile.avatar.url }}{% else %}{% static 'images/logo.png' %}{% endif %}" alt="Avatar">
+    <h2>{{ engineer.username|title }}</h2>
+  </div>
+
+  <div class="chat-box" id="chat-box">
+    {% for message in messages %}
+      <div class="message {% if message.sender == request.user %}sent{% else %}received{% endif %}">
+        {{ message.content }}
+        {% if message.location %}<br><small>📍 {{ message.location }}</small>{% endif %}
+        <span class="timestamp">{{ message.timestamp|date:"H:i" }}</span>
+      </div>
+    {% empty %}
+      <p style="text-align: center; opacity: 0.5;">No messages yet.</p>
+    {% endfor %}
+  </div>
+
+  <form method="POST" action="{% url 'send_message' chat.id %}" class="chat-form">
+    {% csrf_token %}
+    <textarea name="content" rows="1" placeholder="Type your message..." required></textarea>
+
+    <div class="action-menu" id="actionMenu">
+      <button type="button" onclick="toggleActionMenu()">⚙️ Action</button>
+<div id="action-menu" style="display: none; position: absolute; bottom: 80px; background:#2a2a2a; border: 1px solid #FFD700; padding: 0.5rem;">
+  <button type="button" onclick="useMyLocation()">📡 Send My Location</button><br>
+  <button type="button" onclick="openMapPopup()">🗺️ Choose on Map</button>
+</div>
+   <input type="hidden" name="Latitude" id="latitude">
+<input type="hidden" name="Longtitude" id="longitude">
+
+    </div>
+
+    <button type="submit">Send</button>
+  </form>
+</div>
+
+<!-- MAP POPUP MODAL -->
+<div id="map-popup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:999; justify-content:center; align-items:center;">
+  <div style="width:90%; max-width:600px; background:#1e1e1e; border-radius:8px; padding:1rem;">
+    <div id="map" style="height:400px;"></div>
+    <div style="display:flex; justify-content:space-between; margin-top:1rem;">
+      <button onclick="closeMapPopup()" style="background:#333; color:white; padding:0.5rem;">❌ Cancel</button>
+      <button onclick="selectLocation()" style="background:#FFD700; color:black; padding:0.5rem;">✅ Select Location</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  let selectedLat = null;
+  let selectedLng = null;
+  let map, marker;
+
+  function toggleActionMenu() {
+    const menu = document.getElementById("action-menu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+  }
+
+  function useMyLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        selectedLat = position.coords.latitude;
+        selectedLng = position.coords.longitude;
+        document.getElementById("latitude").value = selectedLat;
+        document.getElementById("longitude").value = selectedLng;
+        alert("📍 Location attached!");
+      }, () => {
+        alert("Unable to access your location.");
+      });
+    } else {
+      alert("Geolocation not supported.");
+    }
+  }
+
+  function openMapPopup() {
+    document.getElementById('map-popup').style.display = 'flex';
+    setTimeout(() => {
+      map = L.map('map').setView([6.5244, 3.3792], 13);  // Lagos default
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      map.on('click', function(e) {
+        if (marker) map.removeLayer(marker);
+        marker = L.marker(e.latlng).addTo(map);
+        selectedLat = e.latlng.lat;
+        selectedLng = e.latlng.lng;
+      });
+    }, 100);
+  }
+
+  function closeMapPopup() {
+    document.getElementById('map-popup').style.display = 'none';
+    if (map) map.remove();
+  }
+
+  function selectLocation() {
+    if (!selectedLat || !selectedLng) return alert("Pick a spot on the map.");
+    document.getElementById("latitude").value = selectedLat;
+    document.getElementById("longitude").value = selectedLng;
+    closeMapPopup();
+    alert("✅ Location selected!");
+  }
+</script>
+
+<br><br><br>
+{% include 'partials/customer_tab.html' %}
+</body>
+</html>
