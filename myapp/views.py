@@ -208,9 +208,7 @@ def engineer_settings(request):
     return render(request, 'engineer_setings.html', context)
 
 
-#customer job posting
-def post_job(request):
-    return render(request, 'postJob.html')
+
 
 
 #code sharing
@@ -330,3 +328,95 @@ def chat_inbox(request):
         })
 
     return render(request, 'chat/chat_inbox.html', {'chats': chat_data})
+
+
+
+@login_required
+def engineer_chat_box(request):
+    user = request.user
+    sessions = ChatSession.objects.filter(engineer=user).order_by('-created')
+
+    chat_list = []
+    for session in sessions:
+        # Get last message
+        last_msg = session.messages.order_by('-timestamp').first()
+
+        # Get customer profile if exists
+        customer_profile = getattr(session.customer, 'customer_profile', None)
+
+        chat_list.append({
+            'other_user': session.customer,
+            'profile': customer_profile,
+            'last_message': last_msg
+        })
+
+    context = {
+        'chats': chat_list
+    }
+    return render(request, 'engineer_chat/engineer_chat_box.html', context)
+
+
+@login_required
+def engineer_chat_screen(request, customer_id):
+    user = request.user
+    customer = get_object_or_404(User, id=customer_id)
+    chat, created = ChatSession.objects.get_or_create(customer=customer, engineer=user)
+    messages = chat.messages.order_by('timestamp')
+
+    try:
+        engineer_profile = user.engineer_profile
+    except EngineerProfile.DoesNotExist:
+        engineer_profile = None
+
+    return render(request, 'engineer_chat/engineer_chat_screen.html', {
+        'chat': chat,
+        'messages': messages,
+        'engineer_profile': engineer_profile,
+        'customer': customer
+    })
+
+@login_required
+def send_engineer_message(request, chat_id):
+
+    
+    chat = get_object_or_404(ChatSession, id=chat_id)
+
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        latitude = request.POST.get('Latitude')
+        longitude = request.POST.get('Longtitude')
+
+        Message.objects.create(
+            chat=chat,
+            sender=request.user,
+            content=content,
+            Latitude=latitude if latitude else None,
+            Longtitude=longitude if longitude else None
+        )
+
+        return redirect('engineer_chat_screen', customer_id=chat.customer.id)
+
+    # If it's GET or anything else → just redirect back to chat screen
+    return redirect('engineer_chat_screen', customer_id=chat.customer.id)
+
+
+
+
+@login_required
+def engineer_job_list(request):
+    jobs = Job.objects.filter(status=True).order_by('-created_at')
+    context = {'jobs': jobs}
+    return render(request, 'engineer_job_list.html', context)
+
+
+
+@login_required
+def start_chat_with_customer(request, customer_id):
+    customer = get_object_or_404(User, id=customer_id)
+
+    # Check if chat already exists
+    chat, created = ChatSession.objects.get_or_create(
+        customer=customer,
+        engineer=request.user
+    )
+    return redirect('engineer_chat_screen', customer_id=customer.id)

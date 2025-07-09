@@ -3,8 +3,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>💬 My Chats</title>
-  
+  <title>Engineer Chat Box</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -56,24 +55,27 @@
   </style>
 </head>
 <body>
-  <div class="chat-inbox">
-    <h2 style="text-align: center; color: #FFD700;">📨 My Messages</h2>
+<div class="chat-inbox">
+  <h2 style="text-align: center; color: #FFD700;">📨 Customer Chats</h2>
 
-    {% for item in chats %}
-      <a href="{% url 'chat_screen' item.other_user.id %}" style="text-decoration: none;">
-        <div class="chat-item">
-          <img src="{% if item.profile and item.profile.avatar %}{{ item.profile.avatar.url }}{% else %}{% static 'images/logo.png' %}{% endif %}" alt="Avatar">
-          <div class="chat-info">
-            <h4>{{ item.other_user.username|title }}</h4>
-            <p>{{ item.last_message.content|default:"No messages yet."|truncatechars:40 }}</p>
-          </div>
+ {% for item in chats %}
+  {% if item.last_message %}
+    <a href="{% url 'engineer_chat_screen' item.other_user.id %}" style="text-decoration: none;">
+      <div class="chat-item">
+        <img src="{% if item.profile and item.profile.avatar %}{{ item.profile.avatar.url }}{% else %}{% static 'images/logo.png' %}{% endif %}" alt="Avatar">
+        <div class="chat-info">
+          <h4>{{ item.other_user.username|title }}</h4>
+          <p>{{ item.last_message.content|truncatechars:40 }}</p>
         </div>
-      </a>
-    {% empty %}
-      <p style="text-align:center;">You don't have any chat sessions yet.</p>
-    {% endfor %}
-  </div>
-  <br><br><br>
-{% include 'partials/customer_tab.html' %}
+      </div>
+    </a>
+  {% endif %}
+{% empty %}
+  <p style="text-align:center;">No chat sessions yet.</p>
+{% endfor %}
+
+</div>
+<br><br><br>
+{% include 'partials/engineer_tabs.html' %}
 </body>
 </html>

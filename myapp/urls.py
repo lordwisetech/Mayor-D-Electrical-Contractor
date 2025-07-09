@@ -18,7 +18,7 @@ urlpatterns = [
     path('login/engineer/', views.engineer_login, name='engineer_login'),
    path('logout/engin', views.engineer_logout, name='engineer_logout'),
    path('account/settings/', views.engineer_settings, name='settings_engineer'),
-   path('post*#job/', views.post_job, name='post_job'),
+   
    path('customer/login/', views.customer_login, name='customer_login'),
    path('logout/',views.customer_logout, name='logout'),
 
@@ -31,6 +31,14 @@ urlpatterns = [
    path('chat/<int:engineer_id>/', views.open_chat, name='chat_screen'),
    path('chat/<int:chat_id>/send/', views.send_message, name='send_message'),
    path('inbox/', views.chat_inbox, name='chat_inbox'),
+
+
+    path('engineer/chats/', views.engineer_chat_box, name='engineer_chat_box'),
+    path('engineer/chat/<int:customer_id>/', views.engineer_chat_screen, name='engineer_chat_screen'),
+    path('engineer/send/<int:chat_id>/', views.send_engineer_message, name='send_engineer_message'),
+
+    path('engineer/jobs/', views.engineer_job_list, name='engineer_job_list'),
+    path('engineer/start_chat/<int:customer_id>/', views.start_chat_with_customer, name='start_chat_with_customer'),
 
   
 ] 

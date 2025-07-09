@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Chat with {{ engineer.username }}</title>
+  <title>Chat with {{ customer.username }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
  
   <style>
@@ -13,29 +13,6 @@
       font-family: 'Segoe UI', sans-serif;
       color: white;
     }
-    .action-list {
-  position: absolute;
-  bottom: 3rem;
-  right: 0;
-  background: #2a2a2a;
-  border: 1px solid #FFD700;
-  padding: 0.5rem;
-  border-radius: 6px;
-  display: none;
-  flex-direction: column;
-  gap: 0.5rem;
-  z-index: 999;
-}
-
-.action-list button {
-  background: #333;
-  color: white;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
 
     .chat-container {
       max-width: 720px;
@@ -50,7 +27,8 @@
       align-items: center;
       gap: 1rem;
       padding: 1rem;
-      background: #1e1e1e;
+      background: rgba(30, 30, 30, 0.7);
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid #FFD700;
     }
 
@@ -109,7 +87,8 @@
     .chat-form {
       display: flex;
       padding: 1rem;
-      background: #1e1e1e;
+      background: rgba(30, 30, 30, 0.7);
+      backdrop-filter: blur(10px);
       border-top: 1px solid #FFD700;
       gap: 0.5rem;
     }
@@ -135,6 +114,29 @@
       cursor: pointer;
     }
 
+    .action-list {
+      position: absolute;
+      bottom: 3rem;
+      right: 0;
+      background: #2a2a2a;
+      border: 1px solid #FFD700;
+      padding: 0.5rem;
+      border-radius: 6px;
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 999;
+    }
+
+    .action-list button {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
     iframe {
       width: 100%;
       height: 200px;
@@ -146,8 +148,8 @@
 <body>
 <div class="chat-container">
   <div class="chat-header">
-    <img src="{% if engineer_profile.avatar %}{{ engineer_profile.avatar.url }}{% else %}{% static 'images/logo.png' %}{% endif %}" alt="Avatar">
-    <h2>{{ engineer.username|title }}</h2>
+    <img src="{% if customer.customer_profile.avatar %}{{ customer.customer_profile.avatar.url }}{% else %}{% static 'images/logo.png' %}{% endif %}" alt="Avatar">
+    <h2>{{ customer.username|title }}</h2>
   </div>
 
   <div class="chat-box" id="chat-box">
@@ -172,35 +174,22 @@
     {% endfor %}
   </div>
 
-<form method="POST" action="{% url 'send_message' chat.id %}" class="chat-form">
-  {% csrf_token %}
-  <textarea name="content" rows="1" placeholder="Type your message..." required></textarea>
-
-  <!-- Hidden Location Fields -->
-  <input type="hidden" name="Latitude" id="latitude">
-  <input type="hidden" name="Longtitude" id="longitude">
-
-  <!-- Action Button -->
-  <div class="action-menu" style="position:relative;">
-    <button type="button" onclick="toggleActionMenu()">⚙️</button>
-    <div id="action-list" class="action-list">
-      <button type="button" onclick="useMyLocation()">📍 Send My Location</button>
-      <button type="button" onclick="openMapPopup()">🗺️ Choose on Map</button>
-    </div>
-  </div>
-
-  <button type="submit">Send</button>
-</form>
-
-
-  <!-- <form method="POST" action="{% url 'send_message' chat.id %}" class="chat-form">
-
+  <form method="POST" action="{% url 'send_engineer_message' chat.id %}" class="chat-form">
     {% csrf_token %}
     <textarea name="content" rows="1" placeholder="Type your message..." required></textarea>
     <input type="hidden" name="Latitude" id="latitude">
     <input type="hidden" name="Longtitude" id="longitude">
+
+    <div class="action-menu" style="position:relative;">
+      <button type="button" onclick="toggleActionMenu()">⚙️</button>
+      <div id="action-list" class="action-list">
+        <button type="button" onclick="useMyLocation()">📍 Send My Location</button>
+        <button type="button" onclick="openMapPopup()">🗺️ Choose on Map</button>
+      </div>
+    </div>
+
     <button type="submit">Send</button>
-  </form> -->
+  </form>
 </div>
 
 <script>
@@ -256,8 +245,7 @@
     alert("✅ Map location selected!");
   }
 </script>
-
 <br><br><br>
-{% include 'partials/customer_tab.html' %}
+{% include 'partials/engineer_tabs.html' %}
 </body>
 </html>

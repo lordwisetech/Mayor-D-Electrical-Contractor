@@ -9,38 +9,30 @@
   <style>
     :root {
       --primary: #FFD700;
-      --dark: #00ffcc;
-      --light-bg: rgba(255, 255, 255, 0.05);
-      --accent: #FFB300;
+      --neon: #00ffcc;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --blur: blur(20px);
     }
 
     body {
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: var(--dark);
-      font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 0;
-      overflow-x: hidden;
+      background: linear-gradient(145deg, #0f2027, #203a43, #2c5364);
+      color: var(--neon);
+      font-family: 'Segoe UI', sans-serif;
     }
 
     .profile-header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 2rem;
-      padding: 2rem;
-      background: rgba(0, 255, 204, 0.07);
-      border-bottom: 1px solid var(--primary);
-      box-shadow: 0 5px 15px rgba(0, 255, 204, 0.2);
+      padding: 2rem 1rem 1rem;
+      background: var(--glass-bg);
+      border-bottom: 2px solid var(--primary);
+      box-shadow: 0 8px 25px rgba(0, 255, 204, 0.1);
+      backdrop-filter: var(--blur);
       border-radius: 0 0 1rem 1rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .profile-pic {
-      /* display: flex; */
-      /* flex-direction: ; */
-      align-items: center;
-      padding-left: 45%;
     }
 
     .profile-pic img {
@@ -49,64 +41,56 @@
       object-fit: cover;
       border-radius: 50%;
       border: 3px solid var(--primary);
-      box-shadow: 0 0 12px var(--primary);
+      box-shadow: 0 0 20px var(--primary);
       transition: transform 0.3s ease;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     .profile-pic img:hover {
       transform: scale(1.05);
     }
 
-    .bio-preview {
-      flex: 1;
-    }
-
-    .bio-preview .preview-box {
-      margin-top: 0.5rem;
-    }
-
     form {
       max-width: 800px;
-      margin: 0 auto;
+      margin: 2rem auto;
       padding: 2rem;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--primary);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
       border-radius: 1rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      animation: fadeIn 1s ease-in;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: var(--blur);
     }
 
     h2 {
       text-align: center;
       color: var(--primary);
-      font-weight: bold;
+      margin-bottom: 1.5rem;
     }
 
     label {
       display: block;
       margin-top: 1.5rem;
-      color: var(--dark);
       font-weight: bold;
+      color: var(--primary);
     }
 
     input, textarea {
       width: 100%;
       padding: 0.75rem;
-      margin-top: 0.3rem;
+      margin-top: 0.4rem;
       border-radius: 0.5rem;
-      border: 1px solid var(--dark);
-      background: #fffdf3;
+      border: 1px solid var(--neon);
+      background: #f9f9f9;
+      font-size: 1rem;
     }
 
     .preview-box {
-      background-color: rgba(255, 255, 255, 0.07);
+      background-color: var(--glass-bg);
       padding: 0.8rem;
       border-radius: 0.5rem;
-      box-shadow: 0 0 8px rgba(0, 255, 204, 0.2);
-      margin-bottom: 0.5rem;
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.15);
       color: #eee;
+      margin-top: 0.5rem;
     }
 
     .toggle-btn {
@@ -115,67 +99,54 @@
       border: none;
       cursor: pointer;
       font-weight: bold;
-      margin-bottom: 0.5rem;
+      margin-top: 0.3rem;
     }
 
-    .toggle-field { display: none; }
+    .toggle-field {
+      display: none;
+      margin-top: 0.5rem;
+    }
 
     .checkbox-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.5rem;
-      margin-top: 1.5rem;
+      gap: 1rem;
+      margin-top: 2rem;
+      color: white;
     }
 
     .btn-save {
       margin-top: 2rem;
       width: 100%;
       background: var(--primary);
-      color: #000;
-      padding: 0.75rem;
+      color: black;
+      padding: 0.8rem;
       font-size: 1rem;
       border: none;
       border-radius: 0.5rem;
-      cursor: pointer;
       font-weight: bold;
-      transition: background 0.3s ease, transform 0.2s;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     .btn-save:hover {
-      background: var(--accent);
-      transform: scale(1.03);
+      background: #ffbb00;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    
-    
 
     @media (max-width: 600px) {
-  .profile-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+      .profile-header {
+        text-align: center;
+      }
 
-  .profile-pic img {
-    width: 100px;
-    height: 100px;
-  }
+      .profile-pic img {
+        width: 100px;
+        height: 100px;
+      }
 
-  .bio-preview {
-    width: 100%;
-  }
-
-  input[type="file"] {
-    width: 100%;
-    margin-top: 0.5rem;
-  }
-}
-
+      input[type="file"] {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -187,55 +158,45 @@
     {% else %}
       <img src="{% static 'images/logo.png' %}" alt="No Profile">
     {% endif %}
-    
   </div>
-
-  
-  
 </div>
 
 <form method="POST" enctype="multipart/form-data">
   {% csrf_token %}
+  <h2>⚙️ Account Settings</h2>
 
-  <label for="phone">Phone Number</label>
+  <label for="phone">📞 Phone Number</label>
   <input type="text" id="phone" name="phone" value="{{ profile.phone }}">
 
-  <label for="surname">Surname</label>
+  <label for="surname">👤 Surname</label>
   <input type="text" id="surname" name="surname" value="{{ profile.surname }}">
 
-  <label>Professional Summary</label>
+  <label>📝 Professional Summary</label>
   <div class="preview-box">{{ profile.profesional_summary }}</div>
-  <button type="button" class="toggle-btn" data-target="summary-input">+ Add / Edit Summary</button>
+  <button type="button" class="toggle-btn" data-target="summary-input">+ Edit Summary</button>
   <textarea id="summary-input" class="toggle-field" name="professional_summary">{{ profile.profesional_summary }}</textarea>
 
-  <label>Specialization</label>
+  <label>🔧 Specialization</label>
   <div class="preview-box">{{ profile.Specialization }}</div>
-  <button type="button" class="toggle-btn" data-target="spec-input">+ Add / Edit Specialization</button>
+  <button type="button" class="toggle-btn" data-target="spec-input">+ Edit Specialization</button>
   <textarea id="spec-input" class="toggle-field" name="specialization">{{ profile.Specialization }}</textarea>
 
   <div class="checkbox-group">
-    <label><input type="checkbox" name="is_available" {% if profile.is_available %}checked{% endif %}> Available</label>
-    <label><input type="checkbox" name="on_vacation" {% if profile.on_vacation %}checked{% endif %}> On Vacation</label>
-  </div>
-   
-  <div class="bio-preview">
-    <h3>Bio</h3>
-    <div class="preview-box">{{ profile.Bio|default:"No bio yet." }}</div>
-    <button type="button" class="toggle-btn" data-target="bio-input">+ Add / Edit Bio</button>
-    <textarea id="bio-input" class="toggle-field" name="bio">{{ profile.Bio }}</textarea>
+    <label><input type="checkbox" name="is_available" {% if profile.is_available %}checked{% endif %}> ✅ Available</label>
+    <label><input type="checkbox" name="on_vacation" {% if profile.on_vacation %}checked{% endif %}> 🌴 On Vacation</label>
   </div>
 
-  <!-- <label for="rating">Rating</label>
-  <input type="text" id="rating" name="rating" value="{{ profile.rating }}"> -->
-    
-<label for="avatar">Upload New Profile Picture</label>
-<input type="file" id="avatar" name="avatar">
+  <label>🧬 Bio</label>
+  <div class="preview-box">{{ profile.Bio|default:"No bio yet." }}</div>
+  <button type="button" class="toggle-btn" data-target="bio-input">+ Edit Bio</button>
+  <textarea id="bio-input" class="toggle-field" name="bio">{{ profile.Bio }}</textarea>
 
-  <button type="submit" class="btn-save">⚡ Save Changes</button>
+  <label for="avatar">📸 Upload New Profile Picture</label>
+  <input type="file" id="avatar" name="avatar">
+
+  <button type="submit" class="btn-save">💾 Save Changes</button>
 </form>
 
-
-<br><br><br><br><br><br>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".toggle-btn").forEach(button => {

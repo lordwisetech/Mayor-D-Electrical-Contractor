@@ -1,37 +1,85 @@
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
   .tabs {
+    position: fixed;
+    background: #000;
+    z-index: 100;
+    width: 100%;
+    bottom: 0;
+    left: 0;
     display: flex;
     justify-content: space-around;
-    align-items: center;
-    padding: 1rem 0;
-   background: #111;
-    border-top: 1px solid #ddd;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    z-index: 100;
-    font-family: 'Segoe UI', sans-serif;
+    padding: 0.8rem 0;
+    border-top: 1px solid #FFD700;
   }
 
   .tab {
+    color: #FFD700;
     text-decoration: none;
-    font-weight: bold;
-    color: #00ffcc;
-    padding: 0.5rem 1.2rem;
-    transition: color 0.2s ease, transform 0.2s ease;
-    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .tab:hover {
-    color: #007bff;
-    background-color: #e6f0ff;
-    transform: scale(1.05);
+    color: #fff;
+  }
+
+  /* 🖥️ Desktop Sidebar Mode */
+  @media screen and (min-width: 768px) {
+    .tabs {
+      top: 0;
+      bottom: auto;
+      left: 0;
+      height: 100vh;
+      width: 220px;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      border-top: none;
+      border-right: 1px solid #FFD700;
+      padding: 2rem 1rem;
+      gap: 1.5rem;
+      box-shadow: 2px 0 10px rgba(255, 215, 0, 0.1);
+    }
+
+    .tab {
+      width: 100%;
+      font-size: 1.1rem;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      transition: background 0.2s ease;
+    }
+
+    .tab:hover {
+      background: #1a1a1a;
+      color: #FFD700;
+    }
+  }
+
+  /* Optional content shift on desktop */
+  @media screen and (min-width: 768px) {
+    .main-content {
+      margin-left: 230px; /* Space for sidebar */
+      padding: 2rem;
+    }
   }
 </style>
-
 <div class="tabs">
-  <a href="{% url 'engineer_dashboard' %}" class="tab">🏠 Home</a>
-  <a href="{% url 'post_job' %}" class="tab">💼 Jobs</a>
-  <a href="{% url 'settings_engineer' %}" class="tab">⚙️ Settings</a>
-  <a href="{% url 'engineer_logout' %}" class="tab">🚪 Logout</a>
+  <a href="{% url 'engineer_dashboard' %}" class="tab">🏠</a>
+  <a href="{% url 'engineer_job_list' %}" class="tab">📋</a>
+  <a href="{% url 'engineer_chat_box' %}" class="tab">💬</a>
+  <a href="{% url 'settings_engineer' %}" class="tab">⚙️</a>
+  <a href="{% url 'engineer_logout' %}" class="tab">🚪 </a>
 </div>
+
+<div class="main-content">
+  <!-- 👇 Your page content goes here -->
+</div>
+

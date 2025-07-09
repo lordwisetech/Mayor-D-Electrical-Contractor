@@ -1,64 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Customer Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-  .tabs {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #000;
-    display: flex;
-    justify-content: space-around;
-    padding: 0.8rem 0;
-    border-top: 1px solid #FFD700;
-    z-index: 100;
-    
-    
-  }
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f0f0f;
+      color: white;
+    }
 
-  .tab {
-    color: #FFD700;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-  }
-
-  .tab:hover {
-    color: #fff;
-  }
-
-  /* 🖥️ Desktop styles: sidebar instead of bottom bar */
-  @media screen and (min-width: 768px) {
+    /* 🌟 Nav Tabs */
     .tabs {
-      top: 0;
-      bottom: auto;
+      position: fixed;
+      background: #000;
+      z-index: 100;
+      width: 100%;
+      bottom: 0;
       left: 0;
-      width: 200px;
-      height: 100vh;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-start;
-      border-top: none;
-      border-right: 1px solid #FFD700;
-      padding: 2rem 1rem;
-      gap: 1rem;
-      
+      display: flex;
+      justify-content: space-around;
+      padding: 0.8rem 0;
+      border-top: 1px solid #FFD700;
     }
 
     .tab {
-      display: block;
-      width: 100%;
-      font-size: 1.1rem;
+      color: #FFD700;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s ease;
     }
-  }
-</style>
 
-<!-- 🌟 Responsive Navigation Tabs -->
-<div class="tabs">
-  <a href="{% url 'customer_dashboard' %}" class="tab">🏠Dashboard</a>
-  <a href="{% url 'myjob' %}" class="tab">📋My Jobs</a>
-  <a href="{% url 'engineer_directory' %}" class="tab">🧑Engineers</a>
-  <a href="{% url 'chat_inbox' %}" class="tab">💬Chats</a>
-  <a href="" class="tab">💳Payments</a>
-  <a href="" class="tab">⚙️Settings</a>
-  <a href="{% url 'logout' %}" class="tab">🚪Logout</a>
-</div>
+    .tab:hover {
+      color: white;
+    }
+
+    /* 🖥️ Desktop Sidebar Styles */
+    @media screen and (min-width: 768px) {
+      .tabs {
+        top: 0;
+        bottom: auto;
+        left: 0;
+        width: 220px;
+        height: 100vh;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        border-top: none;
+        border-right: 1px solid #FFD700;
+        padding: 2rem 1rem;
+        gap: 1.5rem;
+        box-shadow: 2px 0 8px rgba(255, 215, 0, 0.1);
+      }
+
+      .tab {
+        display: block;
+        width: 100%;
+        font-size: 1.05rem;
+        padding: 0.6rem 1rem;
+        border-radius: 6px;
+      }
+
+      .tab:hover {
+        background: #1a1a1a;
+        color: #FFD700;
+      }
+
+      .main-content {
+        margin-left: 230px;
+        padding: 2rem;
+      }
+    }
+
+    /* 📱 Mobile main content default */
+    @media screen and (max-width: 767px) {
+      .main-content {
+        padding: 1.5rem;
+        margin-bottom: 80px; /* space for bottom tab */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🌟 Navigation Tabs -->
+  <div class="tabs">
+    <a href="{% url 'customer_dashboard' %}" class="tab">🏠</a>
+    <a href="{% url 'myjob' %}" class="tab">📋 My Jobs</a>
+    <a href="{% url 'engineer_directory' %}" class="tab">🧑</a>
+    <a href="{% url 'chat_inbox' %}" class="tab">💬</a>
+    <a href="#" class="tab">💳</a>
+    <a href="#" class="tab">⚙️</a>
+    <a href="{% url 'logout' %}" class="tab">🚪</a>
+  </div>
+
+  
+
+</body>
+</html>
